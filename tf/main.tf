@@ -26,14 +26,14 @@ resource "aws_default_subnet" "default" {
   }
 }
 
-resource "aws_instance" "vm" {
+resource "aws_instance" "my_app" {
   ami                    = data.aws_ami.ami-amzn2.id
   key_name               = aws_key_pair.key.key_name
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.sg.id]
   user_data = "${file("http.sh")}"
   tags = {
-    Name = "EC2"
+    Name = "Server"
     }
 }
 
@@ -43,16 +43,16 @@ resource "aws_security_group" "sg" {
   vpc_id      = data.aws_vpc.default.id
 
   ingress {
-    description      = "Http"
-    from_port        = 8080
-    to_port          = 8080
+    description      = "Http 8080"
+    from_port        = 30000
+    to_port          = 30000
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
   }
    ingress {
-    description      = "Http"
-    from_port        = 8081
-    to_port          = 8081
+    description      = "Http 8081"
+    from_port        = 30001
+    to_port          = 30001
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
   }
@@ -80,7 +80,12 @@ resource "aws_key_pair" "key" {
   public_key = file("key.pub")
 }
 
-resource "aws_ecr_repository" "assig1" {
-  name                 = "assig1"
+resource "aws_ecr_repository" "dogs-repo" {
+  name                 = "dogs-repo"
+  image_tag_mutability = "MUTABLE"
+}
+
+resource "aws_ecr_repository" "cats-repo" {
+  name                 = "cats-repo"
   image_tag_mutability = "MUTABLE"
 }
