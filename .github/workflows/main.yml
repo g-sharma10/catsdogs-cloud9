@@ -1,5 +1,5 @@
 # This is a basic workflow of ECR
-name: Push image to ECR
+name: Push image to the ECR
 on:
   push:
     branches: [ master ]
